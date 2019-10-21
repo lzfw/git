@@ -1,0 +1,64 @@
+version: '3.5'
+
+services:
+  gitlab:
+    image: 'gitlab/gitlab-ce:latest'
+    restart: always
+    hostname: '${GITLAB_HOSTNAME:-git.halle.tech}'
+    environment:
+      VIRTUAL_HOST: '${GITLAB_HOSTNAME:-git.halle.tech},${REGISTRY_HOSTNAME:-docker.halle.tech}'
+      LETSENCRYPT_HOST: '${GITLAB_HOSTNAME:-git.halle.tech},${REGISTRY_HOSTNAME:-docker.halle.tech}'
+      LETSENCRYPT_EMAIL: '${LETSENCRYPT_EMAIL}'
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://${GITLAB_HOSTNAME:-git.halle.tech}'
+        gitlab_rails['initial_root_password'] = '${GITLAB_ROOT_PASSWORD}'
+
+        gitlab_rails['time_zone'] = 'Europe/Berlin'
+        gitlab_rails['gitlab_email_enabled'] = false
+        gitlab_rails['gitlab_email_display_name'] = 'GitLab | Leopoldina | No Reply'
+        gitlab_rails['gitlab_default_can_create_group'] = false
+        gitlab_rails['gitlab_username_changing_enabled'] = true
+        gitlab_rails['gitlab_email_from'] = 'no-reply@${GITLAB_HOSTNAME:-git.halle.tech}'
+        gitlab_rails['gitlab_email_reply_to'] = 'git@${GITLAB_HOSTNAME:-git.halle.tech}'
+        gitlab_rails['backup_keep_time'] = 604800
+
+        nginx['listen_port'] = 80
+        nginx['listen_https'] = false
+        nginx['redirect_http_to_https'] = true
+        nginx['real_ip_trusted_addresses'] = [ '172.16.0.0/12' ]
+        nginx['real_ip_header'] = 'X-Forwarded-For'
+        nginx['real_ip_recursive'] = 'on'
+
+        registry_external_url 'https://${REGISTRY_HOSTNAME:-docker.halle.tech}'
+        registry_nginx['listen_port'] = 80
+        registry_nginx['listen_https'] = false
+
+        pages_external_url 'https://${GITLAB_HOSTNAME:-git.halle.tech}'
+        pages_nginx['listen_port'] = 80
+        pages_nginx['listen_https'] = false
+        gitlab_pages['inplace_chroot'] = true
+
+        prometheus_monitoring['enable'] = false
+        # Add any other gitlab.rb configuration here, each on its own line
+    ports:
+      - '22:22'
+    volumes:
+      - 'config:/etc/gitlab'
+      - 'logs:/var/log/gitlab'
+      - 'data:/var/opt/gitlab'
+      - '/etc/localtime:/etc/localtime:ro'
+    networks:
+      - proxy-network
+      - default
+
+volumes:
+    config:
+    logs:
+    data:
+
+networks:
+  proxy-network:
+   name: global-proxy-network
+
+# vim: tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
+
