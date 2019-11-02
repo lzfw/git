@@ -12,6 +12,10 @@ Start the "update" task.
 
 ### Roll-Back
 
+1. Create the following symbolic link:
+```bash
+$ ls -s /opt/config/.env.gitlab /opt/gitlab/.env
+```
 TODO
 
 ### Back up
