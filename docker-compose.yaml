@@ -21,6 +21,7 @@ services:
         gitlab_rails['gitlab_email_from'] = 'no-reply@${GITLAB_HOSTNAME:-git.halle.tech}'
         gitlab_rails['gitlab_email_reply_to'] = 'git@${GITLAB_HOSTNAME:-git.halle.tech}'
         gitlab_rails['backup_keep_time'] = 604800
+        gitlab_rails['omniauth_providers'] = [{"name" => "github", "app_id" => "${GITLAB_GH_APP_ID}", "app_secret" => "${GITLAB_GH_APP_SECRET}", "args" => { "scope" => "user:email" }}]
 
         nginx['listen_port'] = 80
         nginx['listen_https'] = false
