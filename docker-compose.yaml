@@ -41,6 +41,10 @@ services:
 
         prometheus_monitoring['enable'] = false
         # Add any other gitlab.rb configuration here, each on its own line
+    sysctls:
+        # Redis needs some tweaks:
+        # https://github.com/docker-library/redis/issues/35
+      - net.core.somaxconn=1024
     ports:
       - '22:22'
     volumes:
