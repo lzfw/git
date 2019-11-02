@@ -4,13 +4,13 @@ services:
   gitlab:
     image: 'gitlab/gitlab-ce:latest'
     restart: always
-    hostname: '${GITLAB_HOSTNAME:-git.halle.tech}'
+    hostname: '${GITLAB_HOSTNAME:-git.leo9000.de}'
     environment:
-      VIRTUAL_HOST: '${GITLAB_HOSTNAME:-git.halle.tech},${REGISTRY_HOSTNAME:-docker.halle.tech}'
-      LETSENCRYPT_HOST: '${GITLAB_HOSTNAME:-git.halle.tech},${REGISTRY_HOSTNAME:-docker.halle.tech}'
+      VIRTUAL_HOST: '${GITLAB_HOSTNAME:-git.leo9000.de},${REGISTRY_HOSTNAME:-docker.leo9000.de}'
+      LETSENCRYPT_HOST: '${GITLAB_HOSTNAME:-git.leo9000.de},${REGISTRY_HOSTNAME:-docker.leo9000.de}'
       LETSENCRYPT_EMAIL: '${LETSENCRYPT_EMAIL}'
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'https://${GITLAB_HOSTNAME:-git.halle.tech}'
+        external_url 'https://${GITLAB_HOSTNAME:-git.leo9000.de}'
         gitlab_rails['initial_root_password'] = '${GITLAB_ROOT_PASSWORD}'
 
         gitlab_rails['time_zone'] = 'Europe/Berlin'
@@ -18,8 +18,8 @@ services:
         gitlab_rails['gitlab_email_display_name'] = 'GitLab | Leopoldina | No Reply'
         gitlab_rails['gitlab_default_can_create_group'] = false
         gitlab_rails['gitlab_username_changing_enabled'] = true
-        gitlab_rails['gitlab_email_from'] = 'no-reply@${GITLAB_HOSTNAME:-git.halle.tech}'
-        gitlab_rails['gitlab_email_reply_to'] = 'git@${GITLAB_HOSTNAME:-git.halle.tech}'
+        gitlab_rails['gitlab_email_from'] = 'no-reply@${GITLAB_HOSTNAME:-git.leo9000.de}'
+        gitlab_rails['gitlab_email_reply_to'] = 'git@${GITLAB_HOSTNAME:-git.leo9000.de}'
         gitlab_rails['backup_keep_time'] = 604800
         gitlab_rails['omniauth_providers'] = [{"name" => "github", "app_id" => "${GITLAB_GH_APP_ID}", "app_secret" => "${GITLAB_GH_APP_SECRET}", "args" => { "scope" => "user:email" }}]
 
@@ -30,11 +30,11 @@ services:
         nginx['real_ip_header'] = 'X-Forwarded-For'
         nginx['real_ip_recursive'] = 'on'
 
-        registry_external_url 'https://${REGISTRY_HOSTNAME:-docker.halle.tech}'
+        registry_external_url 'https://${REGISTRY_HOSTNAME:-docker.leo9000.de}'
         registry_nginx['listen_port'] = 80
         registry_nginx['listen_https'] = false
 
-        pages_external_url 'https://${GITLAB_HOSTNAME:-git.halle.tech}'
+        pages_external_url 'https://${GITLAB_HOSTNAME:-git.leo9000.de}'
         pages_nginx['listen_port'] = 80
         pages_nginx['listen_https'] = false
         gitlab_pages['inplace_chroot'] = true
