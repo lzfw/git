@@ -1,0 +1,40 @@
+# run gitlab, re-create the container if required
+run:
+  retry: 2
+  tags:
+    - shell
+  only:
+    - master
+  when: manual
+  interruptible: false
+  script:
+     # .env file is used because we can't apply environment
+     # variables from the GitLab interface here, so re-starting
+     # GitLab does not require GitLab running
+     - ln -s /opt/config/.env.gitlab ./.env
+     - docker info
+     - docker images
+     - docker-compose up -d
+
+# load the latest image from the docker registry,
+# and if neccessary re-create the container
+upgrade:
+  retry: 2
+  tags:
+    - shell
+  only:
+    - master
+  when: manual
+  interruptible: false
+  script:
+     # .env file is used because we can't apply environment
+     # variables from the GitLab interface here, so re-starting
+     # GitLab does not require GitLab running
+     - ln -s /opt/config/.env.gitlab ./.env
+     - docker info
+     - docker images
+     - docker-compose pull
+     - docker-compose up -d
+
+# vim: tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
+
