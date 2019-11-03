@@ -21,7 +21,7 @@ services:
         gitlab_rails['gitlab_email_from'] = 'no-reply@${GITLAB_HOSTNAME:-git.leo9000.de}'
         gitlab_rails['gitlab_email_reply_to'] = 'git@${GITLAB_HOSTNAME:-git.leo9000.de}'
         gitlab_rails['backup_keep_time'] = 604800
-        gitlab_rails['omniauth_providers'] = [{"name" => "github", "app_id" => "${GITLAB_GH_APP_ID}", "app_secret" => "${GITLAB_GH_APP_SECRET}", "args" => { "scope" => "user:email" }}]
+        gitlab_rails['omniauth_providers'] = [{"name" => "github", "app_id" => "${GITLAB_GH_APP_ID}", "app_secret" => "${GITLAB_GH_APP_SECRET}", "args" => { "scope" => "user:email" }}, {"name" => "azure_oauth2", "args" => { "client_id" => "${GITLAB_MS_CLIENT_ID}", "client_secret" => "${GITLAB_MS_CLIENT_SECRET}", "tenant_id" => "${GITLAB_MS_TENANT_ID}" }}]
 
         nginx['listen_port'] = 80
         nginx['listen_https'] = false
