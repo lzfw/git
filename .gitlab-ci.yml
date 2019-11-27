@@ -2,7 +2,7 @@
 run:
   retry: 2
   tags:
-    - shell
+    - shell-production
   only:
     - master
   when: manual
@@ -16,12 +16,14 @@ run:
      - docker images
      - docker-compose up -d
 
+# TODO: Backup
+
 # load the latest image from the docker registry,
 # and if neccessary re-create the container
 upgrade:
   retry: 2
   tags:
-    - shell
+    - shell-production
   only:
     - master
   when: manual
@@ -40,7 +42,7 @@ upgrade:
 down:
   retry: 2
   tags:
-    - shell
+    - shell-production
   only:
     - master
   when: manual
@@ -56,7 +58,7 @@ down:
 restart:
   retry: 2
   tags:
-    - shell
+    - shell-production
   only:
     - master
   when: manual
