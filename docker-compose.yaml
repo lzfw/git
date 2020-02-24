@@ -14,12 +14,34 @@ services:
         gitlab_rails['initial_root_password'] = '${GITLAB_ROOT_PASSWORD}'
 
         gitlab_rails['time_zone'] = 'Europe/Berlin'
-        gitlab_rails['gitlab_email_enabled'] = false
+        gitlab_rails['gitlab_email_enabled'] = true
         gitlab_rails['gitlab_email_display_name'] = 'GitLab | Leopoldina | No Reply'
         gitlab_rails['gitlab_default_can_create_group'] = false
         gitlab_rails['gitlab_username_changing_enabled'] = true
-        gitlab_rails['gitlab_email_from'] = 'no-reply@${GITLAB_HOSTNAME:-git.leo9000.de}'
-        gitlab_rails['gitlab_email_reply_to'] = 'git@${GITLAB_HOSTNAME:-git.leo9000.de}'
+        gitlab_rails['gitlab_email_from'] = '${GITLAB_MAIL_ADDRESS}'
+        gitlab_rails['gitlab_email_reply_to'] = '${GITLAB_MAIL_ADDRESS}'
+        gitlab_rails['smtp_enable'] = true
+        gitlab_rails['smtp_address'] = 'mail.leo9000.de'
+        gitlab_rails['smtp_port'] = 465
+        gitlab_rails['smtp_user_name'] = '${GITLAB_SMTP_USER_NAME}'
+        gitlab_rails['smtp_password'] = '${GITLAB_SMTP_PASSWORD}'
+        gitlab_rails['smtp_domain'] = '${GITLAB_HOSTNAME}'
+        gitlab_rails['smtp_authentication'] = 'login'
+        gitlab_rails['smtp_enable_starttls_auto'] = true
+        gitlab_rails['smtp_tls'] = true
+        gitlab_rails['smtp_openssl_verify_mode'] = 'peer'
+
+        gitlab_rails['incoming_email_enabled'] = true
+        gitlab_rails['incoming_email_address'] = '${GITLAB_MAIL_INCOMING_ADDRESS}'
+        gitlab_rails['incoming_email_email'] = '${GITLAB_SMTP_USER_NAME}'
+        gitlab_rails['incoming_email_password'] = '${GITLAB_SMTP_PASSWORD}'
+        gitlab_rails['incoming_email_host'] = 'mail.leo9000.de'
+        gitlab_rails['incoming_email_port'] = 993
+        gitlab_rails['incoming_email_ssl'] = true
+        gitlab_rails['incoming_email_start_tls'] = false
+        gitlab_rails['incoming_email_mailbox_name'] = 'inbox'
+        gitlab_rails['incoming_email_idle_timeout'] = 60
+
         gitlab_rails['backup_keep_time'] = 604800
         gitlab_rails['omniauth_providers'] = [{"name" => "github", "app_id" => "${GITLAB_GH_APP_ID}", "app_secret" => "${GITLAB_GH_APP_SECRET}", "args" => { "scope" => "user:email" }}]
 
@@ -54,7 +76,7 @@ services:
       - '/etc/localtime:/etc/localtime:ro'
     networks:
       - proxy-network
-      - default
+      - mail
 
 volumes:
     config:
@@ -64,6 +86,9 @@ volumes:
 networks:
   proxy-network:
    name: global-proxy-network
+   external: true
+  mail:
+   name: global-mail-network
    external: true
 
 # vim: tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
