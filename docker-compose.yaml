@@ -86,10 +86,13 @@ volumes:
 networks:
   proxy-network:
    name: global-proxy-network
-   external: true
+    # not marked as external although it is to avoid a dependency cycle when
+    # installing the projects
   mail:
    name: global-mail-network
-   external: true
+    # not marked as external although it is to avoid a dependency cycle when
+    # installing the projects
+
 
 # vim: tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
 
